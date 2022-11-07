@@ -2,7 +2,9 @@
     "name": "nodered-influx2",
     "description": "Get data from HiveMQ and Save to Influx2",
     "version": "0.0.1",
-    "dependencies": {},
+    "dependencies": {
+        "node-red-contrib-influxdb": "0.6.1"
+    },
     "node-red": {
         "settings": {
             "flowFile": "flow.json",
