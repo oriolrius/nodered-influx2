@@ -2,36 +2,258 @@
     {
         "id": "c36adfb31528b9c7",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "MQTT Sub",
         "disabled": false,
         "info": "",
         "env": []
     },
     {
-        "id": "e1599dc2e38c7ca1",
-        "type": "inject",
-        "z": "c36adfb31528b9c7",
+        "id": "a66cec7df53d0f02",
+        "type": "tab",
+        "label": "MQTT > InfluxDB",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "31e91ed6bfcce1e7",
+        "type": "mqtt-broker",
+        "name": "HiveMQ public",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "95c3453c5024ce46",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
         "name": "",
-        "props": [
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://localhost:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "c0a71e82a1b82c2e",
+        "type": "mqtt in",
+        "z": "c36adfb31528b9c7",
+        "name": "esp8266/group20/env",
+        "topic": "esp8266/group20/env",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "31e91ed6bfcce1e7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 120,
+        "wires": [
+            [
+                "5387d803f1720e52"
+            ]
+        ]
+    },
+    {
+        "id": "5387d803f1720e52",
+        "type": "debug",
+        "z": "c36adfb31528b9c7",
+        "name": "MQTT data received",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "21b899a47ff17234",
+        "type": "mqtt in",
+        "z": "a66cec7df53d0f02",
+        "name": "esp8266/group20/env",
+        "topic": "esp8266/group20/env",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "31e91ed6bfcce1e7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 60,
+        "wires": [
+            [
+                "8b5deff8a5844a7c",
+                "e4a3701531a0d1fc",
+                "802c97ab81b6aae0"
+            ]
+        ]
+    },
+    {
+        "id": "8b5deff8a5844a7c",
+        "type": "debug",
+        "z": "a66cec7df53d0f02",
+        "name": "MQTT data received",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "6faed25094274501",
+        "type": "influxdb out",
+        "z": "a66cec7df53d0f02",
+        "influxdb": "95c3453c5024ce46",
+        "name": "InfluxDB2",
+        "measurement": "",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "my_org",
+        "bucket": "my_bucket",
+        "x": 800,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "e4a3701531a0d1fc",
+        "type": "change",
+        "z": "a66cec7df53d0f02",
+        "name": "temp",
+        "rules": [
             {
-                "p": "payload"
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.temperature",
+                "tot": "msg"
             },
             {
-                "p": "topic",
-                "vt": "str"
+                "t": "set",
+                "p": "measurement",
+                "pt": "msg",
+                "to": "temperature",
+                "tot": "str"
             }
         ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 280,
-        "y": 220,
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 180,
         "wires": [
-            []
+            [
+                "5b0c9c04522da76e",
+                "6faed25094274501"
+            ]
         ]
+    },
+    {
+        "id": "5b0c9c04522da76e",
+        "type": "debug",
+        "z": "a66cec7df53d0f02",
+        "name": "temp object",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "802c97ab81b6aae0",
+        "type": "change",
+        "z": "a66cec7df53d0f02",
+        "name": "hum",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.humidity",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "measurement",
+                "pt": "msg",
+                "to": "humidity",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 280,
+        "wires": [
+            [
+                "52992b8a1f1246b7",
+                "6faed25094274501"
+            ]
+        ]
+    },
+    {
+        "id": "52992b8a1f1246b7",
+        "type": "debug",
+        "z": "a66cec7df53d0f02",
+        "name": "hum object",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 340,
+        "wires": []
     }
 ]
